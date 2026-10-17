@@ -1,0 +1,432 @@
+/* Time Recorder plugin styles */
+
+/* === Grid Modal ===
+   注：tr-grid-modal 加在 .modal-content 自身上（GridModal 的 contentEl），
+   写 .tr-grid-modal 后代选择器时不要再嵌 .modal-content。 */
+.tr-grid-header {
+  text-align: center;
+  font-size: var(--font-ui-medium);
+  color: var(--text-muted);
+  margin-bottom: var(--size-4-3);
+  padding-bottom: var(--size-4-2);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.tr-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--size-4-3);
+}
+
+/* 2 列仅留给真正的古董窄屏。主流手机 CSS 视口恰为 360px，
+   断点若定在 360 会把它们全部误伤成 2 列（12 格排 6 行、一屏放不下）。 */
+@media (max-width: 320px) {
+  .tr-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.tr-cell {
+  background: var(--tr-cat-bg, var(--background-secondary));
+  border: 1px solid var(--tr-cat-border, var(--background-modifier-border));
+  border-radius: var(--radius-m);
+  padding: var(--size-4-3);
+  text-align: center;
+  cursor: pointer;
+  min-height: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.tr-cell:hover {
+  background: var(--background-modifier-hover);
+  border-color: var(--interactive-accent);
+}
+
+.tr-cell:active {
+  background: var(--background-modifier-active-hover);
+}
+
+.tr-cell-emoji {
+  font-size: 2em;
+  line-height: 1;
+}
+
+.tr-cell-label {
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  margin-top: var(--size-2-2);
+}
+
+.tr-grid-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-4);
+  padding-top: var(--size-4-2);
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.tr-grid-footer button {
+  flex: 1 1 auto;
+  min-width: 4.5em;
+  min-height: 44px;
+  padding: var(--size-4-2) var(--size-4-3);
+}
+
+.tr-clickable-notice {
+  cursor: pointer;
+}
+
+/* === 手机端：打卡弹窗一屏布局 ===
+   行高上限用视口公式现算：(视口高 − 头尾固定开销约 300px) ÷ 行数（JS 写入 --tr-grid-rows），
+   分类越多格子自动越矮，56px 硬下限兜底。
+   ⚠️ 不要改成依赖 .modal / .modal-content 高度的 flex 链——Obsidian 手机弹窗是
+   内容自适应的 bottom sheet，父级高度不确定，百分比/flex 等分会把格子压成 0 高（1.0.6 真机踩过）。 */
+.is-phone .tr-grid-modal .tr-grid {
+  grid-auto-rows: minmax(56px, calc((100dvh - 300px) / var(--tr-grid-rows, 4)));
+  gap: var(--size-4-2);
+}
+
+.is-phone .tr-cell {
+  min-height: 56px;
+  padding: var(--size-2-3);
+}
+
+.is-phone .tr-cell-emoji {
+  font-size: 1.5em;
+}
+
+.is-phone .tr-grid-footer {
+  margin-top: var(--size-4-2);
+  /* 避开安卓底部导航条/手势区 */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* === Custom Activity Modal === */
+.tr-custom-modal .modal-content {
+  padding: var(--size-4-4);
+}
+
+.tr-form-row {
+  margin-bottom: var(--size-4-3);
+}
+
+.tr-form-row label {
+  display: block;
+  margin-bottom: var(--size-2-2);
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.tr-form-row input[type="text"] {
+  width: 100%;
+  padding: var(--size-4-2);
+  font-size: var(--font-ui-medium);
+}
+
+.tr-form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-4);
+}
+
+.tr-form-buttons button {
+  padding: var(--size-4-2) var(--size-4-4);
+  min-height: 44px;
+}
+
+/* === Status Bar === */
+.tr-status {
+  padding: 0 var(--size-4-2);
+  cursor: default;
+}
+
+/* === Today Summary View === */
+.tr-summary-container {
+  padding: var(--size-4-4);
+  overflow-y: auto;
+  height: 100%;
+}
+
+.tr-summary-header h3 {
+  margin: 0 0 var(--size-2-2);
+}
+
+.tr-summary-sub {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  margin-bottom: var(--size-4-4);
+}
+
+.tr-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-ui-small);
+}
+
+.tr-summary-table th,
+.tr-summary-table td {
+  padding: var(--size-2-3) var(--size-4-2);
+  text-align: left;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.tr-summary-table th {
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+.tr-unrecorded-row {
+  color: var(--text-muted);
+  border-top: 2px solid var(--background-modifier-border);
+}
+
+.tr-cat-dot {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  margin-right: 0.4em;
+  vertical-align: middle;
+}
+
+.tr-summary-footer {
+  margin-top: var(--size-4-4);
+  text-align: right;
+}
+
+.tr-summary-footer button {
+  padding: var(--size-4-2) var(--size-4-3);
+  min-height: 44px;
+}
+
+/* === Timeline View === */
+.tr-timeline-container {
+  padding: var(--size-4-4);
+  overflow-y: auto;
+  height: 100%;
+}
+
+.tr-timeline-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-bottom: var(--size-4-4);
+  padding-bottom: var(--size-4-2);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.tr-timeline-title {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: var(--font-ui-medium);
+  color: var(--text-normal);
+}
+
+.tr-timeline-header button {
+  min-height: 44px;
+  padding: var(--size-4-2) var(--size-4-3);
+}
+
+.tr-timeline-body {
+  position: relative;
+  width: 100%;
+  border-left: 2px solid var(--background-modifier-border);
+  /* 底部留白，确保最底「24」刻度标签完整可见、不被容器边缘裁掉 */
+  margin-bottom: var(--size-4-3);
+}
+
+.tr-hour-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.tr-hour-label {
+  position: absolute;
+  left: var(--size-4-2);
+  top: 0;
+  transform: translateY(-50%);
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  background: var(--background-primary);
+  padding: 0 var(--size-2-2);
+}
+
+/* 半点刻度：虚线 + 标签更淡一档，弱化于整点，便于一眼区分整点/半点 */
+.tr-half-row {
+  border-top-style: dashed;
+}
+
+.tr-half-row .tr-hour-label {
+  color: var(--text-faint);
+}
+
+.tr-segment-block {
+  position: absolute;
+  left: 48px;
+  right: var(--size-4-2);
+  background: var(--tr-cat-bg, var(--background-modifier-hover));
+  border: 1px solid var(--tr-cat-border, var(--background-modifier-border));
+  border-left: 3px solid var(--tr-cat-accent, var(--interactive-accent));
+  border-radius: var(--radius-s);
+  padding: var(--size-2-2) var(--size-4-2);
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  overflow: hidden;
+  box-sizing: border-box;
+  cursor: pointer; /* 色块可点击打开编辑器（Task 21）；手机无指针，仅 PC 生效 */
+}
+
+.tr-segment-block:hover {
+  background: var(--background-modifier-active-hover);
+}
+
+/* 短段：色块保持真实（矮）高度、绝不重叠；标签左端、垂直居中，
+   允许上下微露（overflow:visible），与长段左上标签方向一致 = 全时间轴统一左对齐。
+   z-index 抬升，避免露出的文字被相邻色块裁切。 */
+.tr-segment-short {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  white-space: nowrap;
+  overflow: visible;
+  padding-top: 0;
+  padding-bottom: 0;
+  z-index: 1;
+}
+
+/* === Segment Editor Modal === */
+.tr-editor-modal .modal-content {
+  padding: var(--size-4-4);
+}
+
+.tr-editor-modal input[type="time"],
+.tr-editor-modal input[type="text"],
+.tr-editor-modal select {
+  width: 100%;
+  padding: var(--size-4-2);
+  min-height: 44px;
+  font-size: var(--font-ui-medium);
+}
+
+.tr-drag-handle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+  background: transparent;
+}
+
+.tr-drag-handle:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.tr-drag-top {
+  top: 0;
+}
+
+.tr-drag-bottom {
+  bottom: 0;
+}
+
+/* ---- Settings tab (editable) ---- */
+.tr-settings-hint {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  margin: 0.25em 0 0.75em;
+}
+.tr-category-row .tr-emoji-input {
+  width: 4.5em;
+  min-height: 44px;
+  text-align: center;
+}
+.tr-category-row .tr-alias-input {
+  flex: 1;
+  min-width: 8em;
+}
+.tr-other-row {
+  opacity: 0.8;
+}
+
+/* === Summary period tabs / nav === */
+.tr-summary-tabs,
+.tr-summary-nav {
+  display: flex;
+  gap: var(--size-4-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--size-4-2);
+}
+
+.tr-summary-tabs button,
+.tr-summary-nav button {
+  min-height: 44px; /* 移动端点触 */
+  padding: 0 var(--size-4-3);
+}
+
+/* 切语言后「分类已保留」的引导提示（会话级） */
+.tr-lang-cat-hint {
+  color: var(--text-accent);
+}
+
+/* === Month heatmap（月历热力图，周一起始）=== */
+.tr-heatmap-wrap {
+  /* 与上方汇总表格明确隔开：留白 + 分隔线（与底栏分隔风格一致） */
+  margin-top: var(--size-4-8);
+  padding-top: var(--size-4-3);
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.tr-heatmap-title {
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  margin-bottom: var(--size-4-2);
+}
+
+.tr-heatmap {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--size-2-2);
+  max-width: 260px;
+}
+
+.tr-heat-weekday {
+  text-align: center;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
+}
+
+.tr-heat-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-border);
+  cursor: pointer;
+}
+
+.tr-heat-blank {
+  background: transparent;
+  cursor: default;
+}
+
+.tr-heat-future {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.tr-heat-1 { background: rgba(var(--color-green-rgb), 0.3); }
+.tr-heat-2 { background: rgba(var(--color-green-rgb), 0.55); }
+.tr-heat-3 { background: rgba(var(--color-green-rgb), 0.78); }
+.tr-heat-4 { background: rgb(var(--color-green-rgb)); }
+
+.tr-heat-today {
+  box-shadow: inset 0 0 0 2px var(--interactive-accent);
+}
